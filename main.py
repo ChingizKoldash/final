@@ -238,10 +238,9 @@ def delete_quiz(quiz_id: int, user: User = Depends(get_current_user), db: Sessio
 async def update_quiz(
     quiz_id: int,
     request: Request,
-    user: User = Depends(get_current_user), 
+    user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-
     quiz = db.query(Quiz).filter_by(id=quiz_id, owner_id=user.id).first()
     if not quiz:
         raise HTTPException(status_code=404, detail="Quiz not found or access denied")
@@ -260,18 +259,33 @@ async def update_quiz(
             question.answer = form.get(f"answer_{qid}")
 
     # Добавим новые вопросы
+    max_id = db.query(Question.id).order_by(Question.id.desc()).first()
+    next_id = (max_id[0] if max_id else 0) + 1
+    form = await request.form()
     index = 0
-    while f"new_question_{index}" in form:
+    while True:
+        index += 1
         new_q = form.get(f"new_question_{index}")
         new_o = form.get(f"new_options_{index}")
         new_a = form.get(f"new_answer_{index}")
-        if new_q and new_a and new_o:
-            q = Question(text=new_q, options=new_o, answer=new_a, quiz_id=quiz.id)
+        if not new_q and not new_o and not new_a and index > len(form)/4:
+            break
+
+        if new_q and new_o and new_a:
+            q = Question(
+                id=next_id,
+                text=new_q,
+                options=new_o,
+                answer=new_a,
+                quiz_id=quiz.id
+            )
             db.add(q)
-        index += 1
+            next_id += 1
+        
 
     db.commit()
     return RedirectResponse(url="/quizzes", status_code=302)
+
 
 @app.get("/quiz/{quiz_id}/start", response_class=HTMLResponse)
 def start_quiz(quiz_id: int, request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
