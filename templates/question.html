@@ -3,7 +3,7 @@
 <head>
     <title>{{ quiz.title }} - Question {{ progress.current_index + 1 if progress.current_index is defined else '?' }}</title>
     <script>
-        let ws = new WebSocket(`ws://${location.host}/ws/quiz/{{ quiz.id }}/question/{{ question.id }}`);
+        let ws = new WebSocket(`wss://${location.host}/ws/quiz/{{ quiz.id }}/question/{{ question.id }}`);
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
             document.getElementById("correct-stat").textContent = `${data.correct_count} user(s) have answered correctly.`;
