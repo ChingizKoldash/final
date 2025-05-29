@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Create Quiz</title>
+  <script>
+    let index = 0;
+    function addQuestion() {
+      const container = document.getElementById("questions");
+      const div = document.createElement("div");
+      div.innerHTML = `
+        <fieldset style="margin-bottom: 1em; padding: 1em; border: 1px solid #ccc;">
+          <legend>Question ${index + 1}</legend>
+          <label>Question:</label><br>
+          <input name="question_${index}" required><br><br>
+
+          <label>Option A:</label><br>
+          <input name="option_${index}_0" required><br>
+          <label>Option B:</label><br>
+          <input name="option_${index}_1" required><br>
+          <label>Option C:</label><br>
+          <input name="option_${index}_2" required><br>
+          <label>Option D:</label><br>
+          <input name="option_${index}_3" required><br><br>
+
+          <label>Correct Option (A, B, C, D):</label><br>
+          <input name="answer_${index}" required><br>
+
+          <button type="button" onclick="this.closest('fieldset').remove()">Remove Question</button>
+        </fieldset>
+      `;
+      container.appendChild(div);
+      index++;
+    }
+  </script>
+</head>
+<body>
+  <h2>Create a Quiz</h2>
+  <form method="post" action="/create_quiz">
+    <label>Quiz Title:</label><br>
+    <input name="title" required><br><br>
+
+    <div id="questions"></div>
+    <button type="button" onclick="addQuestion()">Add Question</button><br><br>
+    <button type="submit">Create Quiz</button>
+  </form>
+</body>
+</html>

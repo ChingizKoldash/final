@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Join Quiz</title>
+</head>
+<body>
+  <h2>Join Quiz: {{ quiz.title }}</h2>
+  <p>Room Code: <strong>{{ quiz.code }}</strong></p>
+
+  <form action="/guest/start/{{ quiz.id }}" method="post">
+    <label>Your name:</label><br>
+    <input type="text" name="guest_name" required><br><br>
+    <button type="submit">Start Quiz</button>
+  </form>
+
+  <br>
+  <a href="/">Back to home</a>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Результаты викторины</title>
+</head>
+<body>
+    <h2>Результаты</h2>
+    <p>Вы ответили правильно на {{ score }} из {{ total }} вопросов.</p>
+
+    {% if leaderboard %}
+    <h3>Таблица лидеров:</h3>
+    <ol>
+        {% for user in leaderboard %}
+            <li>{{ user.name }} — {{ user.score }} баллов ({{ '%.2f'|format(user.duration) }} сек)</li>
+        {% endfor %}
+    </ol>
+    {% endif %}
+
+    {% if is_guest %}
+        <a href="/" class="btn">На главную</a>
+    {% else %}
+        <a href="/quizzes" class="btn">Мои квизы</a>
+    {% endif %}
+</body>
+</html>

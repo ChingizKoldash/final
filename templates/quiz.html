@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{ quiz.title }}</title>
+</head>
+<body>
+  <h2>{{ quiz.title }}</h2>
+
+  {% if questions %}
+    <h3>Questions:</h3>
+    <ol>
+      {% for question in questions %}
+        <li>{{ question.text }}</li>
+      {% endfor %}
+    </ol>
+  {% else %}
+    <p>No questions yet for this quiz.</p>
+  {% endif %}
+
+  <br>
+  <a href="/quiz/{{ quiz.id }}/start">Start Quiz</a>
+</body>
+</html>

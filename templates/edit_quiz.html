@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Edit Quiz</title>
+  <script>
+    let qIndex = {{ quiz.questions|length }};
+    function addQuestionField() {
+      const container = document.getElementById("questions");
+      const html = `
+        <div>
+          <label>Question:</label><br>
+          <input name="new_question_${qIndex}" required><br>
+          <label>Options (semicolon-separated):</label><br>
+          <input name="new_options_${qIndex}" required><br>
+          <label>Correct Answer:</label><br>
+          <input name="new_answer_${qIndex}" required><br><br>
+        </div>`;
+      container.insertAdjacentHTML("beforeend", html);
+      qIndex++;
+    }
+  </script>
+</head>
+<body>
+  <h2>Edit Quiz: {{ quiz.title }}</h2>
+
+  <form action="/edit_quiz/{{ quiz.id }}" method="post">
+    <label>Title:</label><br>
+    <input type="text" name="title" value="{{ quiz.title }}" required><br><br>
+
+    <div id="questions">
+      {% for q in quiz.questions %}
+        <div>
+          <input type="hidden" name="qid_{{ q.id }}" value="{{ q.id }}">
+          <label>Question:</label><br>
+          <input name="question_{{ q.id }}" value="{{ q.text }}" required><br>
+          <label>Options (semicolon-separated):</label><br>
+          <input name="options_{{ q.id }}" value="{{ q.options }}" required><br>
+          <label>Correct Answer:</label><br>
+          <input name="answer_{{ q.id }}" value="{{ q.answer }}" required><br>
+          <label><input type="checkbox" name="delete_{{ q.id }}"> Delete this question</label>
+          <br><br>
+        </div>
+      {% endfor %}
+    </div>
+
+    <button type="button" onclick="addQuestionField()">Add Question</button><br><br>
+    <button type="submit">Save Changes</button>
+  </form>
+
+  <br><a href="/quizzes">Back</a>
+</body>
+</html>

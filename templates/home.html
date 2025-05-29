@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Welcome to Quiz Game</title>
+</head>
+<body>
+  <h1>Welcome to the Quiz Game!</h1>
+
+  <h3>What would you like to do?</h3>
+
+  <ul>
+    <li><a href="/login">Login</a></li>
+    <li><a href="/register">Register</a></li>
+  </ul>
+
+  <h3>Or join a quiz as a guest:</h3>
+  <form method="get" action="/join">
+    <label>Enter room code:</label><br>
+    <input name="code" required>
+    <button type="submit">Join</button>
+  </form>
+</body>
+</html>

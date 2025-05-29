@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ quiz.title }} - Question {{ progress.current_index + 1 if progress.current_index is defined else '?' }}</title>
+    <script>
+        let ws = new WebSocket(`ws://${location.host}/ws/quiz/{{ quiz.id }}/question/{{ question.id }}`);
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            document.getElementById("correct-stat").textContent = `${data.correct_count} user(s) have answered correctly.`;
+            document.getElementById("total-stat").textContent = `${data.answered_names.length} participant(s) have answered.`;
+            const userList = document.getElementById("user-list");
+            userList.innerHTML = "";
+            for (const name of data.answered_names) {
+                const li = document.createElement("li");
+                li.textContent = name;
+                userList.appendChild(li);
+            }
+        };
+    </script>
+</head>
+<body>
+    <h2>{{ quiz.title }}</h2>
+    <p>Question {{ progress.current_index + 1 if progress.current_index is defined else '?' }} of {{ quiz.questions|length }}</p>
+
+    <form action="{% if progress.name is defined %}/guest/quiz/{{ quiz.id }}/answer{% else %}/quiz/{{ quiz.id }}/answer{% endif %}" method="post">
+        <p>{{ question.text }}</p>
+        <input type="hidden" name="question_id" value="{{ question.id }}">
+
+        {% set options = question.options.split(';') %}
+        {% for option in options %}
+            <label>
+                <input type="radio" name="answer" value="{{ option }}" required>
+                {{ option }}
+            </label><br>
+        {% endfor %}
+
+        <br>
+        <button type="submit">Submit</button>
+    </form>
+
+    <hr>
+    <p id="correct-stat"></p>
+    <p id="total-stat"></p>
+
+    <h4>Participants who already answered:</h4>
+    <ul id="user-list"></ul>
+</body>
+</html>
